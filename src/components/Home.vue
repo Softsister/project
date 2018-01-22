@@ -4,8 +4,9 @@
       <div class="logo"></div>
       <el-menu
         :collapse="isCollapse"
-        unique-opened="true"
+        :unique-opened="true"
         default-active="2"
+        router
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
@@ -17,7 +18,7 @@
             <i class="el-icon-location"></i>
             <span slot="title">用户管理</span>
           </template>
-          <el-menu-item index="/user">
+          <el-menu-item index="/home/user">
             <i class="el-icon-menu"></i>
             <span>用户列表</span>
           </el-menu-item>
@@ -92,7 +93,6 @@
 </template>
 
 <script>
-import {testData} from '../api/api.js'
 export default {
   data () {
     return {
@@ -113,15 +113,6 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
-  },
-  mounted () {
-    testData({
-      query: '',
-      pagenum: 1,
-      pagesize: 10
-    }).then(res => {
-      console.log(res)
-    })
   }
 }
 </script>
