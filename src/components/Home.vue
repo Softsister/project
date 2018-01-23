@@ -28,11 +28,11 @@
             <i class="el-icon-location"></i>
             <span slot="title">权限管理</span>
           </template>
-          <el-menu-item index="/role">
+          <el-menu-item index="/home/role">
             <i class="el-icon-menu"></i>
             <span slot="title">角色列表</span>
           </el-menu-item>
-          <el-menu-item index="/auth">
+          <el-menu-item index="/home/right">
             <i class="el-icon-menu"></i>
             <span slot="title">权限列表</span>
           </el-menu-item>

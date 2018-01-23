@@ -49,7 +49,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button size='small' type="primary" icon="el-icon-edit" @click='editHandler(scope.row)'></el-button>
-          <el-button size='small' @click="deleteHandler(scope.row)" type="primary" icon="el-icon-delete"></el-button>
+          <el-button size='small' @click="deleteHandler(scope.row)" type="danger" icon="el-icon-delete"></el-button>
           <el-button size='small' type="primary" icon="el-icon-check"></el-button>
         </template>
       </el-table-column>
