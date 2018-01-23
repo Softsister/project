@@ -36,6 +36,11 @@
         label="电话">
       </el-table-column>
       <el-table-column
+        prop="role_name"
+        width="180"
+        label="角色">
+      </el-table-column>
+      <el-table-column
         prop="mg_state"
         width="180"
         label="用户状态">
@@ -49,8 +54,8 @@
         label="操作">
         <template slot-scope="scope">
           <el-button size='small' type="primary" icon="el-icon-edit" @click='editHandler(scope.row)'></el-button>
-          <el-button size='small' @click="deleteHandler(scope.row)" type="primary" icon="el-icon-delete"></el-button>
-          <el-button size='small' type="primary" icon="el-icon-check"></el-button>
+          <el-button size='small' @click="deleteHandler(scope.row)" type="danger" icon="el-icon-delete"></el-button>
+          <el-button size='small' type="primary" @click='grantUser(scope.row)' icon="el-icon-check"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,10 +115,31 @@
         <el-button type="primary" @click="submitUser4Edit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 角色授权 -->
+    <el-dialog
+      title="授权角色"
+      @close='closeUserDialog("grant")'
+      :visible="dialogVisible4Grant"
+      width="30%">
+      <div><span>当前用户名:</span>  <span>{{currentUser.username}}</span></div>
+      <span>请选择角色:</span>
+      <el-select v-model="currentRole" placeholder="请选择">
+        <el-option
+          v-for="item in roleList"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Grant = false">取 消</el-button>
+        <el-button type="primary" @click="submitUser4Grant">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import {getUsersData, toggleUserState, addUser, getUsersById, editUser, deleteUser} from '../../api/api.js'
+import {getUsersData, toggleUserState, addUser, getUsersById, editUser, deleteUser, rolesList, grantUserRole} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -123,6 +149,10 @@ export default {
       tableData: [], // 实际的表格列表数据
       dialogVisible4Add: false,
       dialogVisible4Edit: false,
+      dialogVisible4Grant: false,
+      currentUser: '',
+      currentRole: '',
+      roleList: [],
       query: '',
       form: {
         username: '',
@@ -153,6 +183,29 @@ export default {
     }
   },
   methods: {
+    submitUser4Grant () {
+      grantUserRole({id: this.currentUser.id, rid: this.currentRole}).then(res => {
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.initList()
+          this.dialogVisible4Grant = false
+          this.$message({
+            type: 'info',
+            message: res.meta.msg
+          })
+        }
+      })
+    },
+    grantUser (row) {
+      this.currentUser = row
+      rolesList().then(res => {
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.roleList = res.data
+          this.dialogVisible4Grant = true
+        }
+      })
+    },
     queryHandler () {
       this.initList()
     },
@@ -226,8 +279,10 @@ export default {
     closeUserDialog (flag) {
       if (flag === 'add') {
         this.dialogVisible4Add = false
-      } else {
+      } else if (flag === 'edit') {
         this.dialogVisible4Edit = false
+      } else {
+        this.dialogVisible4Grant = false
       }
     },
     handleSizeChange (val) {
