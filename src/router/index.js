@@ -23,9 +23,9 @@ export default new Router({
       redirect: '/welcome',
       children: [
         {path: '/welcome', component: Welcome},
-        {path: 'user', component: User},
-        {path: 'right', component: Right},
-        {path: 'role', component: Role}
+        {path: '/users', component: User},
+        {path: '/rights', component: Right},
+        {path: '/roles', component: Role}
       ]
     }
   ]

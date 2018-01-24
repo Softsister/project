@@ -13,12 +13,34 @@
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b">
+        <el-submenu :key='item.id' :index="item.path" v-for='item in menuData'>
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span slot="title">{{item.authName}}</span>
+          </template>
+          <el-menu-item :key='taget.id' :index='taget.path' v-for='taget in item.children'>
+            <i class="el-icon-menu"></i>
+            <span>{{taget.authName}}</span>
+          </el-menu-item>
+        </el-submenu>
+      </el-menu>
+      <!-- <el-menu
+        :collapse="isCollapse"
+        :unique-opened="true"
+        default-active="2"
+        router
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
+        background-color="#545c64"
+        text-color="#fff"
+        active-text-color="#ffd04b">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span slot="title">用户管理</span>
           </template>
-          <el-menu-item index="/home/user">
+          <el-menu-item index="/user">
             <i class="el-icon-menu"></i>
             <span>用户列表</span>
           </el-menu-item>
@@ -75,7 +97,7 @@
             <span slot="title">数据报表</span>
           </el-menu-item>
         </el-submenu>
-      </el-menu>
+      </el-menu> -->
     </el-aside>
     <el-container>
       <el-header>
@@ -93,10 +115,12 @@
 </template>
 
 <script>
+import {getMenus} from '../api/api.js'
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      menuData: []
     }
   },
   methods: {
@@ -113,6 +137,14 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
+  },
+  mounted () {
+    getMenus().then(res => {
+      console.log(res)
+      if (res.meta.status === 200) {
+        this.menuData = res.data
+      }
+    })
   }
 }
 </script>

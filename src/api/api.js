@@ -113,3 +113,9 @@ export const grantUserRole = (params) => {
     return res.data
   })
 }
+// 获取左侧菜单权限
+export const getMenus = () => {
+  return axios.get('menus').then(res => {
+    return res.data
+  })
+}
